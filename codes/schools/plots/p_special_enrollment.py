@@ -201,7 +201,7 @@ Plotting regular and special enrollments
 '''
 colors = ['g', 'b']
 c = ['%sp', '%re']
-title = 'Disabled enrollment'
+title = 'Disabled enrollment in special and regular classroomns'
 ylabels = ['% Special classroomns',
            '% Regular classroomns']
 
@@ -234,6 +234,6 @@ Plotting two scales
 colors = ['g', 'b']
 c = ['%re','Classroom']
 title = 'Disabled enrollment in regular schools and program expansion - CE'
-ylabels = ['% Regular enrollment',
-           '%  Municipalities']
+ylabels = ['% Disabled students in regular classroomns',
+           '%  Municipalities with the program']
 two_scales(frame,c,colors,'year',title,ylabels)
