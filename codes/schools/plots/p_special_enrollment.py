@@ -111,6 +111,9 @@ def classroom(state = 'brasil'):
 
 '''
 
+PART 1: Using school info
+=======
+
 Uploading the data 
 
 '''
@@ -139,6 +142,70 @@ ylabels = ['% Special schools',
 
 two_scales(data,c,colors,'year',title,ylabels)
 
+'''
+
+Municipalities increase and regular enrollment.
+
+First call the data
+
+'''
+state = 'CE'
+classroom(state)
+ce = df
+ce = ce.loc[ce.year > 2008]
+ce = ce.loc[ce.year < 2018]
+data = data.loc[data.year > 2008]
+data = data.loc[data.year < 2018]
+'''
+
+Join the data
+
+'''
+frame = data.join(ce.drop('year', axis =1))
+'''
+
+Plotting two scales
+
+'''
+colors = ['g', 'b']
+c = ['%re','Classroom']
+title = 'Disabled enrollment in regular schools and program expansion - CE'
+ylabels = ['% Regular enrollment',
+           '%  Municipalities']
+two_scales(frame,c,colors,'year',title,ylabels)
+
+'''
+
+PART 2: Using classroom info
+=======
+
+Uploading the data 
+
+'''
+os.chdir('/Users/angelosantos/Library/CloudStorage/OneDrive-UniversityOfHouston/ideas/disabilities/data/data_created/enrollment')
+data = pd.read_pickle('d_enrollment_classroomns_ce.pkl')
+data["%sp"] = 100*data['special']/(data['special']+data['regular']+data['nan'])
+data["%sp_notnan"] = 100*data['special']/(data['special']+data['regular'])
+data["%re"] = 100*data['regular']/(data['special']+data['regular']+data['nan'])
+data["%na"] = 100*data['nan']/(data['special']+data['regular']+data['nan'])
+'''
+
+Plotting just percentage of disabled students enrolled in special classroomns
+
+'''
+sns.lineplot(data = data, x='year', y = '%sp_notnan').set(title = 'Percentage Disabled students in special institutions', ylabel ='% of Disabled students')
+'''
+
+Plotting regular and special enrollments
+
+'''
+colors = ['g', 'b']
+c = ['%sp', '%re']
+title = 'Disabled enrollment'
+ylabels = ['% Special classroomns',
+           '% Regular classroomns']
+
+two_scales(data,c,colors,'year',title,ylabels)
 '''
 
 Municipalities increase and regular enrollment.
