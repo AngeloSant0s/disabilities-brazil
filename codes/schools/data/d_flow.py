@@ -128,7 +128,7 @@ for y in range(2007,2015):
     os.chdir('/Users/angelosantos/Library/CloudStorage/OneDrive-UniversityOfHouston/ideas/disabilities/data/raw_data/education_census/'+str(y)+'/DADOS')
     ne = pd.read_csv('MATRICULA_NORDESTE.CSV', delimiter= '|')
     ne = ne.loc[ne['FK_COD_ESTADO_ESCOLA'] ==  23]
-    ne = ne.loc[ne['ID_POSSUI_NEC_ESPECIAL'] == 1]
+    #ne = ne.loc[ne['ID_POSSUI_NEC_ESPECIAL'] == 1]
     ne = ne.rename( columns = {'PK_COD_ENTIDADE' : 'id_escola',
                                'FK_COD_ALUNO' : 'cd_aluno_inep', 
                                'PK_COD_TURMA' : 'id_turma',
@@ -145,7 +145,7 @@ for y in range(2015,2018):
     os.chdir('/Users/angelosantos/Library/CloudStorage/OneDrive-UniversityOfHouston/ideas/disabilities/data/raw_data/education_census/'+str(y)+'/DADOS')
     ne = pd.read_csv('MATRICULA_NORDESTE.CSV', delimiter= '|')
     ne = ne.loc[ne['CO_UF'] ==  23]
-    ne = ne.loc[ne['IN_NECESSIDADE_ESPECIAL'] == 1]
+    #ne = ne.loc[ne['IN_NECESSIDADE_ESPECIAL'] == 1]
     ne = ne.rename( columns = {'CO_ENTIDADE' : 'id_escola',
                                'CO_PESSOA_FISICA' : 'cd_aluno_inep', 
                                'ID_TURMA' : 'id_turma',
@@ -314,13 +314,6 @@ for c in ['%special','%new entries']:
 
 graph = pd.concat(graph, axis = 0 ).reset_index().drop('index', axis = 1)
 sns.lineplot(data = graph, x='year', y='entries', hue='hue')
-
-drop_outs = drop_outs.rename(columns={'ano':'year'})
-c = ['%new','%special']
-title = 'Disabled dropout by type of classroomn- CE'
-ylabels = ['% New flow',
-           '% Special flow']
-two_scales(flow,c,colors,'year',title,ylabels)
 '''
 
 Plot drop outs
