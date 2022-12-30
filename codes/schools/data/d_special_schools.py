@@ -10,8 +10,10 @@ There is information if the school has infrastructure in acessibility:
     - 2007 to 2014: ID_DEPENDENCIAS_PNE (dummy)
     - 2015 to 2017: IN_DEPENDENCIAS_PNE (dummy)
     
+This dataset also will include the schools with the AEE available:
+    - 
+    - 
 I also created a dataset to plot evolution of educational institutions types, named d_special_schools_growth.pkl
-
 '''
 import os
 import pandas as pd 
@@ -42,14 +44,14 @@ for y in range(2007,2015):
     # upload schools census 
     schools = pd.read_csv('ESCOLAS.csv', encoding = 'latin1',delimiter = '|')
     # restrict to non-private
-    schools = schools.loc[schools['ID_DEPENDENCIA_ADM'] != 4]
+    # schools = schools.loc[schools['ID_DEPENDENCIA_ADM'] != 4]
     # store number of regular and special schools
-    dic['year'] = y
+    dic['year'] = y 
     dic['special'] = schools.ID_MOD_ENS_ESP.value_counts(dropna=False)[1]
     dic['regular'] = schools.ID_MOD_ENS_ESP.value_counts(dropna=False)[0]
     dic['nan'] = schools.ID_MOD_ENS_ESP.value_counts(dropna=False).tolist()[1]
     sc_growth.append(dic)
-    schools = schools[['ANO_CENSO','FK_COD_MUNICIPIO','PK_COD_ENTIDADE' ,'ID_MOD_ENS_ESP','ID_DEPENDENCIAS_PNE']]
+    schools = schools[['ANO_CENSO','ID_DEPENDENCIA_ADM','FK_COD_MUNICIPIO','PK_COD_ENTIDADE' ,'ID_MOD_ENS_ESP','ID_DEPENDENCIAS_PNE','ID_SALA_ATENDIMENTO_ESPECIAL']]
     c1.append(schools)
 
 '''
@@ -59,10 +61,12 @@ Rename and concat the datasets for schools
 '''
 c1 = pd.concat(c1, axis = 0)
 c1 = c1.rename(columns = {'ANO_CENSO' : 'ano',
-                                  'FK_COD_MUNICIPIO' : 'id_municipio',
-                                  'PK_COD_ENTIDADE' : 'id_escola',
-                                  'ID_MOD_ENS_ESP' : 'edu_especial',
-                                  'ID_DEPENDENCIAS_PNE' : 'acessibilidade_pne'})
+                          'ID_DEPENDENCIA_ADM' : 'dependencia',
+                          'FK_COD_MUNICIPIO' : 'id_municipio',
+                          'PK_COD_ENTIDADE' : 'id_escola',
+                          'ID_MOD_ENS_ESP' : 'edu_especial',
+                          'ID_DEPENDENCIAS_PNE' : 'acessibilidade_pne',
+                          'ID_SALA_ATENDIMENTO_ESPECIAL' : 'aee'})
 '''
 
 Loading data from 2015 to 2017
@@ -73,21 +77,23 @@ for y in range(2015,2018):
     dic = {}
     os.chdir('/Users/angelosantos/Library/CloudStorage/OneDrive-UniversityOfHouston/ideas/disabilities/data/raw_data/education_census/'+str(y)+'/DADOS')
     schools = pd.read_csv('ESCOLAS.csv', encoding = 'latin1',delimiter = '|')
-    schools = schools.loc[schools['TP_DEPENDENCIA'] != 4]
+    #schools = schools.loc[schools['TP_DEPENDENCIA'] != 4]
     dic['year'] = y
     dic['special'] = schools.IN_ESPECIAL_EXCLUSIVA.value_counts(dropna=False)[1]
     dic['regular'] = schools.IN_ESPECIAL_EXCLUSIVA.value_counts(dropna=False)[0]
     dic['nan'] = schools.IN_ESPECIAL_EXCLUSIVA.value_counts(dropna=False).tolist()[1]
     sc_growth.append(dic)
-    schools = schools[['NU_ANO_CENSO','CO_MUNICIPIO','CO_ENTIDADE' ,'IN_ESPECIAL_EXCLUSIVA','IN_DEPENDENCIAS_PNE']]
+    schools = schools[['NU_ANO_CENSO','TP_DEPENDENCIA','CO_MUNICIPIO','CO_ENTIDADE' ,'IN_ESPECIAL_EXCLUSIVA','IN_DEPENDENCIAS_PNE','IN_SALA_ATENDIMENTO_ESPECIAL']]
     c2.append(schools)
 
 c2 = pd.concat(c2, axis = 0)
 c2 = c2.rename(columns = {'NU_ANO_CENSO' : 'ano',
-                                  'CO_MUNICIPIO' : 'id_municipio',
-                                  'CO_ENTIDADE' : 'id_escola',
-                                  'IN_ESPECIAL_EXCLUSIVA' : 'edu_especial',
-                                  'IN_DEPENDENCIAS_PNE' : 'acessibilidade_pne'})
+                          'TP_DEPENDENCIA' : 'dependencia',
+                          'CO_MUNICIPIO' : 'id_municipio',
+                          'CO_ENTIDADE' : 'id_escola',
+                          'IN_ESPECIAL_EXCLUSIVA' : 'edu_especial',
+                          'IN_DEPENDENCIAS_PNE' : 'acessibilidade_pne',
+                          'IN_SALA_ATENDIMENTO_ESPECIAL' : 'aee'})
 '''
 
 Concat both samples (07-14 and 15-17)
@@ -95,7 +101,7 @@ Concat both samples (07-14 and 15-17)
 '''
 schools = pd.concat([c1,c2], axis = 0).reset_index().drop('index',axis=1)
 os.chdir('/Users/angelosantos/Library/CloudStorage/OneDrive-UniversityOfHouston/ideas/disabilities/data/data_created/schools')
-schools.to_pickle('d_special_schools.pkl')
+schools.to_pickle('d_schools.pkl')
 '''
 
 Dataset to plot institutions growth between (07-17)
